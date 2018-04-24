@@ -1,0 +1,28 @@
+{
+  "name": "VoyageReportService",
+  "version": "1.0.0",
+  "description": "Service to Submit and Retrieve Voyage Report",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "engines": {
+    "node": "1.1.1",
+    "npm": "1.1.1"
+  },
+  "keywords": [
+    "Journey Log",
+    "Voyage Report"
+  ],
+  "authors": {
+    "author1": "Soumya Dey",
+    "author2": "Sourav Debnath"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "compression": "^1.7.2",
+    "express": "^4.16.3",
+    "helmet": "^3.12.0"
+  }
+}
