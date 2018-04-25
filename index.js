@@ -15,7 +15,7 @@ const app= express();
 // app.use(bodyParser, {urlEncoded: true});
 app.use(express.json());
 
-const port= process.env.PORT | 3000;
+const port= process.env.PORT || 3000;
 
 const reportSchema={
     reportType: String,
