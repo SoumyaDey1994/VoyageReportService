@@ -12,6 +12,11 @@ mongoose.connect(`mongodb://admin:${encodeURIComponent('super@admin')}@ds014578.
 const app= express();
 //Parse request and response object as JSON
 app.use(express.json());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
 
 const port= process.env.PORT || 5000;
 
@@ -64,11 +69,7 @@ async function getReport(res){
         return res.status(404).send(`The Requested Report not available`);
 
     console.log(`Fetched Report: ${report}`)
-    res.set({
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
-        "Content-Type": "application/json",
-      });
+    
     res.status(200).send(report);
 }
 
