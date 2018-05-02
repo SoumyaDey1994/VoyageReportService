@@ -13,7 +13,7 @@ const app= express();
 //Parse request and response object as JSON
 app.use(express.json());
 
-const port= process.env.PORT || 3000;
+const port= process.env.PORT || 5000;
 
 //statement object schema 
 const statementSchema=joi.object().keys({
@@ -64,6 +64,10 @@ async function getReport(res){
         return res.status(404).send(`The Requested Report not available`);
 
     console.log(`Fetched Report: ${report}`)
+    res.set({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      });
     res.status(200).send(report);
 }
 
