@@ -17,7 +17,7 @@ module.exports={
         responseObject= res;
         let allStatements= report.map(item=> item.statement);
         noOfStatementsInReport= allStatements.length;
-        console.log("No of Statements in Report: "+global.noOfStatementsInReport);
+        console.log("No of Statements in Report: "+noOfStatementsInReport);
         getAnalysisReport(allStatements);
     }
 }
