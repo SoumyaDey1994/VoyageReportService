@@ -10,7 +10,7 @@ var analyzedReport={};                   // Object to hold analyzed report of a 
 var completeAnalyzedReportSummary=[];   // Array to hold complete analyzed report
 const defaultValueForInentEntity='NA'; // Default value of intent and entities
 
-var flightNumber='';
+var flightNumber=' ';
 // exported function
 module.exports={
     getAllStatementsFromReport: function(report, res){
