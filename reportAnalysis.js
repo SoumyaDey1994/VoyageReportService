@@ -10,7 +10,7 @@ var analyzedReport={};                   // Object to hold analyzed report of a 
 var completeAnalyzedReportSummary=[];   // Array to hold complete analyzed report
 const defaultValueForInentEntity='NA'; // Default value of intent and entities
 
-var flightNumber=' ';
+var flightNumber='';                  // Default value of Flight Number
 // exported function
 module.exports={
     getAllStatementsFromReport: function(report, res){
@@ -52,54 +52,13 @@ function setOptionsToFireServiceToLUIS(statement){
         };
     return options;
 }
-//option to fire request to bitext and get uniqe result id
-function setOptionsToGetKeyForSentiment(statement){
-    var options = { 
-        method: 'POST',
-        url: 'https://svc02.api.bitext.com/sentiment',
-        headers: 
-                { 
-                    Authorization: 'bearer d8a8c923da794b16b7478e03e5a4e37c',
-                    'Cache-Control': 'no-cache',
-                    'content-type': 'application/json' 
-                },
-        json: true,
-        body:
-            {
-                "language": "eng",
-			    "text": statement
-            } 
-    };
-    return options;
-}
-//option to fire request to bitext and get Sentiment Score
-function setOptionsToGetSentimentScoreByResultId(resultId){
-    var options = { 
-        method: 'GET',
-        url: 'https://svc02.api.bitext.com/sentiment/'+resultId,
-        headers: 
-                { 
-                    Authorization: 'bearer d8a8c923da794b16b7478e03e5a4e37c',
-                    'Cache-Control': 'no-cache',
-                    'content-type': 'application/json' 
-                },
-        json: true
-    }
 
-    return options;
-}
 //Get intent, entities and sentiment of each statement from LUIS and bitext
 async function getIntentEntitiesAndSentiment(statement){
     let optionsToFireServiceToLUIS= setOptionsToFireServiceToLUIS(statement);
-    let optionToGetKeyForSentiment= setOptionsToGetKeyForSentiment(statement);
-
     try{
-        let intentEntityResponse=JSON.parse(await rp(optionsToFireServiceToLUIS));
-        let responseFromSentimentAnalysis= JSON.stringify(await rp(optionToGetKeyForSentiment));
-        let sentimentResultId= JSON.parse(responseFromSentimentAnalysis).resultid;
-        let optionToGetSentimentResponse= setOptionsToGetSentimentScoreByResultId(sentimentResultId)
-        let sentiMentResponse= JSON.stringify(await rp(optionToGetSentimentResponse));
-        let sentimentValue= Math.floor(JSON.parse(sentiMentResponse).sentimentanalysis[0].score);   //get sentiment score as integer value
+        let intentEntityResponse=JSON.parse(await rp(optionsToFireServiceToLUIS));  
+        let sentimentValue= intentEntityResponse.sentimentAnalysis.score.toFixed(2);    //get sentiment score upto 2 decimal point
         getIntentEntityAndSentiment(intentEntityResponse, sentimentValue);
     }catch(err){
         console.log("Error Occured: "+err);
@@ -124,7 +83,7 @@ function getIntentEntityAndSentiment(intentEntity, sentimentValue){
 //Get Intent of Statement 
 function getIntentOfStatement(highestProbablityIntent){
     let intentScore=highestProbablityIntent.score.toFixed(1);
-    const permissibleThreshold=0.5;
+    const permissibleThreshold=0.4;
     if(intentScore >=permissibleThreshold)
         return highestProbablityIntent.intent;
     else
@@ -132,12 +91,8 @@ function getIntentOfStatement(highestProbablityIntent){
 }
 //Get sentiment value based on sentiment score
 function getSentimentOfStatement(sentimentValue){
-    if(sentimentValue > 0)
-        return 'Positive';
-    else if(sentimentValue < 0)
-        return 'Negetive';
-    else
-        return 'Neutral';
+    let sentimentlabel= (sentimentValue>=0.26)?((sentimentValue>=0.55)?"Positive":"Neutral"):"Negetive";
+    return sentimentlabel;
 }
 //Get all entity name and their values
 function getAllEntitiesAndCorrespondingValues(intentEntity){
@@ -162,13 +117,15 @@ function getAllEntitiesAndCorrespondingValues(intentEntity){
 function getTheFlightNumberFromAnalyzedReport(completeAnalyzedReportSummary){
     let firstStatementReport= completeAnalyzedReportSummary[0];
     let entitiesOfFirstReport= firstStatementReport.entities;
-    console.log("Entity 0: "+entitiesOfFirstReport[0]);
+    let noOfEntities=entitiesOfFirstReport.length;
+    console.log("No of Entities in Statement 1: "+noOfEntities);
 
-    entitiesOfFirstReport.forEach(function(item){
-        if(item.property==='flightNo'){
-            flightNumber=item.value;
+    for(let entity of entitiesOfFirstReport){
+        if(entity.property==='flightNo'){
+            flightNumber=entity.value;
             console.log("Flight No: "+flightNumber);
+            break;
         }
-    })
-    dbOperation.addDateAndFlightNumber(flightNumber, completeAnalyzedReportSummary, responseObject)
+    }
+    dbOperation.addDateAndFlightNumber(flightNumber, completeAnalyzedReportSummary, responseObject);
 }
