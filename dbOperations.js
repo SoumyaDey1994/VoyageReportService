@@ -14,7 +14,6 @@ const reportSchema= new mongoose.Schema({
     },
     flightNo: {         // Collect the Flight Number
         type: String,
-        required: true,
         default: ''
     },
     report: {           // The Complete analyzed report object 

@@ -54,12 +54,13 @@ app.get('/api/journeyReports/:id', (req, res)=>{
 //POST the commander record to DB
 app.post('/api/journeyReports', (req, res)=>{
     // Fetching only the report obj from request body
+    let report= [];
     let requestBody = req.body;
     let validationResult= joi.validate(requestBody, submittedJourneyReportSchema)
     if(validationResult.error)
         return res.status(400).send("Error: "+validationResult.error.details[0].message);
     
-    let report= requestBody.report;
+    report= requestBody.report;
     // updateTheReport(report, res);
     analyzeReport.getAllStatementsFromReport(report, res);
 });

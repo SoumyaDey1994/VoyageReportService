@@ -27,7 +27,7 @@ async function getAnalysisReport(allStatements){
     for(let i in allStatements){
         try{
             console.log(`Analyzing Statement ${i}`);
-            await getIntentEntitiesAndSentiment(allStatements[i]);
+            await getIntentEntitiesAndSentiment(allStatements[i]) 
         }catch(err){
             console.log("Error in Analysis Process: "+err);
         }
