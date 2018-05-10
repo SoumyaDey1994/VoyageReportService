@@ -1,5 +1,5 @@
+"use strict";
 const mongoose= require('mongoose');
-
 var responseMessage={};
 //Schema to store journey report to MongoDB Collection
 const reportSchema= new mongoose.Schema({

@@ -1,3 +1,4 @@
+"use strict";
 const express= require("express");
 const mongoose= require('mongoose');
 mongoose.Promise= require("bluebird");  // To handle the mongoose promise deprecation
@@ -59,10 +60,10 @@ app.post('/api/journeyReports', (req, res)=>{
     let validationResult= joi.validate(requestBody, submittedJourneyReportSchema)
     if(validationResult.error)
         return res.status(400).send("Error: "+validationResult.error.details[0].message);
-    
-    report= requestBody.report;
-    // updateTheReport(report, res);
-    analyzeReport.getAllStatementsFromReport(report, res);
+    else{
+        report= requestBody.report;
+        analyzeReport.getAllStatementsFromReport(report, res);
+    }
 });
 
 app.listen(port, ()=>console.log(`Qatar Airways PoC has been started at http://localhost:${port}`));

@@ -1,8 +1,9 @@
+"use strict";
 const request= require('request');
 const rp= require('request-promise');
 const dbOperation= require('./dbOperations');
 
-var responseObject;                          // Variable to hold the response object
+var responseObject=null;                          // Variable to hold the response object
 var noOfStatementsInReport;                 // variable to hold no of statements of report
 var entitiesAndValues={};                  // Object to hold entity property and value
 var propertyAndCorrespondingValue=[];     // Array to hold all entities of a single statement
