@@ -23,30 +23,30 @@ module.exports={
 }
 
 //Fire statements to LUIS and bitext one by one
-// async function getAnalysisReport(allStatements){
-//     for(let i in allStatements){
-//         try{
-//             console.log(`Analyzing Statement ${i}`);
-//             await getIntentEntitiesAndSentiment(allStatements[i]) 
-//         }catch(err){
-//             console.log("Error in Analysis Process: "+err);
-//         }
-//     }
-// }
-
-function getAnalysisReport(allStatements){
-    allStatements.forEach(statement => {
-        setTimeout(async ()=>{
-            try{
-                console.log(`Analyzing Statement ${statement}`);
-                await getIntentEntitiesAndSentiment(statement); 
-                }catch(err){
-                    console.log("Error in Analysis Process: "+err);
-                    responseObject.status(503).send({"Error":err});
-            }
-        }, 1500)
-    })
+async function getAnalysisReport(allStatements){
+    for(let i in allStatements){
+        try{
+            console.log(`Analyzing Statement ${i}`);
+            await getIntentEntitiesAndSentiment(allStatements[i]) 
+        }catch(err){
+            console.log("Error in Analysis Process: "+err);
+        }
+    }
 }
+
+// function getAnalysisReport(allStatements){
+//     allStatements.forEach(statement => {
+//         setTimeout(async ()=>{
+//             try{
+//                 console.log(`Analyzing Statement ${statement}`);
+//                 await getIntentEntitiesAndSentiment(statement); 
+//                 }catch(err){
+//                     console.log("Error in Analysis Process: "+err);
+//                     responseObject.status(503).send({"Error":err});
+//             }
+//         }, 1500)
+//     })
+// }
 
 //option to fire request to LUIS and identify Intent and Entities
 function setOptionsToFireServiceToLUIS(statement){
@@ -92,7 +92,8 @@ function getIntentEntityAndSentiment(intentEntity, sentimentValue){
     analyzedReport={};  //clear the report object
 
     if(completeAnalyzedReportSummary.length===noOfStatementsInReport){
-        getTheFlightNumberFromAnalyzedReport(completeAnalyzedReportSummary)
+        getTheFlightNumberFromAnalyzedReport(completeAnalyzedReportSummary);
+        completeAnalyzedReportSummary=[];
     }
 }
 //Get Intent of Statement 
@@ -129,8 +130,8 @@ function getAllEntitiesAndCorrespondingValues(intentEntity){
     return propertyAndCorrespondingValue;
 }
 
-function getTheFlightNumberFromAnalyzedReport(completeAnalyzedReportSummary){
-    let firstStatementReport= completeAnalyzedReportSummary[0];
+function getTheFlightNumberFromAnalyzedReport(ReportSummary){
+    let firstStatementReport= ReportSummary[0];
     let entitiesOfFirstReport= firstStatementReport.entities;
     let noOfEntities=entitiesOfFirstReport.length;
     console.log("No of Entities in Statement 1: "+noOfEntities);
@@ -142,5 +143,6 @@ function getTheFlightNumberFromAnalyzedReport(completeAnalyzedReportSummary){
             break;
         }
     }
-    dbOperation.addDateAndFlightNumber(flightNumber, completeAnalyzedReportSummary, responseObject);
+    dbOperation.addDateAndFlightNumber(flightNumber, ReportSummary, responseObject);
+    flightNumber='';
 }

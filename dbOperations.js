@@ -93,8 +93,10 @@ async function saveReport(reportObject, responseObj){
         responseMessage.message="Report Saved Successfully";
 
         responseObj.status(200).send(responseMessage);
+        responseObj=null;
     }else{
         responseMessage.error="Sorry, There is an error occured while storing report";
         responseObj.status(400).send(responseMessage);
+        responseObj=null;
     }
 }
