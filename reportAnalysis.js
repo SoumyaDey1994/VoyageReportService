@@ -23,16 +23,31 @@ module.exports={
 }
 
 //Fire statements to LUIS and bitext one by one
-async function getAnalysisReport(allStatements){
-    for(let i in allStatements){
-        try{
-            console.log(`Analyzing Statement ${i}`);
-            await getIntentEntitiesAndSentiment(allStatements[i]) 
-        }catch(err){
-            console.log("Error in Analysis Process: "+err);
-        }
-    }
+// async function getAnalysisReport(allStatements){
+//     for(let i in allStatements){
+//         try{
+//             console.log(`Analyzing Statement ${i}`);
+//             await getIntentEntitiesAndSentiment(allStatements[i]) 
+//         }catch(err){
+//             console.log("Error in Analysis Process: "+err);
+//         }
+//     }
+// }
+
+function getAnalysisReport(allStatements){
+    allStatements.forEach(statement => {
+        setTimeout(async ()=>{
+            try{
+                console.log(`Analyzing Statement ${statement}`);
+                await getIntentEntitiesAndSentiment(statement); 
+                }catch(err){
+                    console.log("Error in Analysis Process: "+err);
+                    responseObject.status(503).send({"Error":err});
+            }
+        }, 1500)
+    })
 }
+
 //option to fire request to LUIS and identify Intent and Entities
 function setOptionsToFireServiceToLUIS(statement){
     //MSDN Subscription of Sourav Debnath- 24652
