@@ -108,7 +108,7 @@ function getIntentOfStatement(highestProbablityIntent){
 }
 //Get sentiment value based on sentiment score
 function getSentimentOfStatement(sentimentValue){
-    let sentimentlabel= (sentimentValue>=0.26)?((sentimentValue>=0.55)?"Positive":"Neutral"):"Negetive";
+    let sentimentlabel= (sentimentValue>=0.25)?((sentimentValue>=0.55)?"Positive":"Neutral"):"Negetive";
     return sentimentlabel;
 }
 //Get all entity name and their values
