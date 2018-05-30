@@ -23,7 +23,7 @@ const reportSchema= new mongoose.Schema({
             validator: function(reportArray){
                 return reportArray && reportArray.length> 0
             },
-            message: 'A report should have atleast one item'
+            message: 'A report should have atleast one record'
         }
     }
 })
