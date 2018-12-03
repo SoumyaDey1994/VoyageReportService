@@ -1,0 +1,5 @@
+{
+    "dbConnection" : "mongodb://admin:super%40admin@ds014578.mlab.com:14578/voyage_report",
+    "luisAPI" : "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/0c35057e-e9e4-4361-ba3e-0a7045b35911"
+}
+
