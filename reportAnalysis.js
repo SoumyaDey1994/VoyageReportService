@@ -1,9 +1,8 @@
 "use strict";
-const request= require('request');
 const rp= require('request-promise');
 const dbOperation= require('./dbOperations');
 const luisService = require('./services/luis');
-let responseObject=null;                          // Variable to hold the response object
+let responseObject=null;                     // Variable to hold the response object
 let noOfStatementsInReport;                 // variable to hold no of statements of report
 let entitiesAndValues={};                  // Object to hold entity property and value
 let propertyAndCorrespondingValue=[];     // Array to hold all entities of a single statement
@@ -27,28 +26,12 @@ module.exports={
 async function getAnalysisReport(allStatements){
     for(let i in allStatements){
         try{
-            console.log(`Analyzing Statement ${i}`);
             await getIntentEntitiesAndSentiment(allStatements[i]) 
         }catch(err){
             console.log("Error in Analysis Process: "+err);
         }
     }
 }
-
-// function getAnalysisReport(allStatements){
-//     allStatements.forEach(statement => {
-//         setTimeout(async ()=>{
-//             try{
-//                 console.log(`Analyzing Statement ${statement}`);
-//                 await getIntentEntitiesAndSentiment(statement); 
-//                 }catch(err){
-//                     console.log("Error in Analysis Process: "+err);
-//                     responseObject.status(503).send({"Error":err});
-//             }
-//         }, 1500)
-//     })
-// }
-
 //Get intent, entities and sentiment of each statement from LUIS and bitext
 async function getIntentEntitiesAndSentiment(statement){
     let optionsToFireServiceToLUIS= luisService(statement);
@@ -110,16 +93,14 @@ function getAllEntitiesAndCorrespondingValues(intentEntity){
     }
     return propertyAndCorrespondingValue;
 }
-
+// Collect the flight no from report
 function getTheFlightNumberFromAnalyzedReport(ReportSummary){
     let firstStatementReport= ReportSummary[0];
     let entitiesOfFirstReport= firstStatementReport.entities;
-    let noOfEntities=entitiesOfFirstReport.length;
 
     for(let entity of entitiesOfFirstReport){
         if(entity.property==='flightNo'){
             flightNumber=entity.value;
-            console.log("Flight No: "+flightNumber);
             break;
         }
     }
