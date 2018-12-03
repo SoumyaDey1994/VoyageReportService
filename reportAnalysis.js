@@ -107,3 +107,4 @@ function getTheFlightNumberFromAnalyzedReport(ReportSummary){
     dbOperation.addDateAndFlightNumber(flightNumber, ReportSummary, responseObject);
     flightNumber='';
 }
+

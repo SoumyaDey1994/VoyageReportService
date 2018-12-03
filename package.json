@@ -7,8 +7,8 @@
     "start": "node index"
   },
   "engines": {
-    "node": "8.1.0",
-    "npm": "6.0.0"
+    "node": "8.11.4",
+    "npm": "6.0.1"
   },
   "keywords": [
     "Journey Log",
