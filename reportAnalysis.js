@@ -2,16 +2,16 @@
 const request= require('request');
 const rp= require('request-promise');
 const dbOperation= require('./dbOperations');
-
-var responseObject=null;                          // Variable to hold the response object
-var noOfStatementsInReport;                 // variable to hold no of statements of report
-var entitiesAndValues={};                  // Object to hold entity property and value
-var propertyAndCorrespondingValue=[];     // Array to hold all entities of a single statement
-var analyzedReport={};                   // Object to hold analyzed report of a single statement
-var completeAnalyzedReportSummary=[];   // Array to hold complete analyzed report
+const luisService = require('./services/luis');
+let responseObject=null;                          // Variable to hold the response object
+let noOfStatementsInReport;                 // variable to hold no of statements of report
+let entitiesAndValues={};                  // Object to hold entity property and value
+let propertyAndCorrespondingValue=[];     // Array to hold all entities of a single statement
+let analyzedReport={};                   // Object to hold analyzed report of a single statement
+let completeAnalyzedReportSummary=[];   // Array to hold complete analyzed report
 const defaultValueForInentEntity='NA'; // Default value of intent and entities
 
-var flightNumber='';                  // Default value of Flight Number
+let flightNumber='';                  // Default value of Flight Number
 // exported function
 module.exports={
     getAllStatementsFromReport: function(report, res){
@@ -49,29 +49,9 @@ async function getAnalysisReport(allStatements){
 //     })
 // }
 
-//option to fire request to LUIS and identify Intent and Entities
-function setOptionsToFireServiceToLUIS(statement){
-    //MSDN Subscription of Sourav Debnath- 24652
-    var options = { 
-                method: 'GET',
-                url: 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/0c35057e-e9e4-4361-ba3e-0a7045b35911',
-                qs: 
-                    { 'subscription-key': '106877aa8c7945c484f3f577ffdb6564',
-                        timezoneOffset: '0',
-                        q: statement 
-                    },
-                headers: 
-                    { 
-                        'Cache-Control': 'no-cache',
-                        'content-type': 'application/json'  
-                    } 
-        };
-    return options;
-}
-
 //Get intent, entities and sentiment of each statement from LUIS and bitext
 async function getIntentEntitiesAndSentiment(statement){
-    let optionsToFireServiceToLUIS= setOptionsToFireServiceToLUIS(statement);
+    let optionsToFireServiceToLUIS= luisService(statement);
     try{
         let intentEntityResponse=JSON.parse(await rp(optionsToFireServiceToLUIS));  
         let sentimentValue= intentEntityResponse.sentimentAnalysis.score.toFixed(2);    //get sentiment score upto 2 decimal point
@@ -135,7 +115,6 @@ function getTheFlightNumberFromAnalyzedReport(ReportSummary){
     let firstStatementReport= ReportSummary[0];
     let entitiesOfFirstReport= firstStatementReport.entities;
     let noOfEntities=entitiesOfFirstReport.length;
-    console.log("No of Entities in Statement 1: "+noOfEntities);
 
     for(let entity of entitiesOfFirstReport){
         if(entity.property==='flightNo'){

@@ -4,7 +4,6 @@
   "description": "Service to Submit and Retrieve Voyage Report",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index"
   },
   "engines": {
@@ -21,11 +20,11 @@
   },
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^3.5.1",
-    "body-parser": "^1.18.2",
-    "compression": "^1.7.2",
+    "body-parser": "^1.18.3",
+    "config": "^3.0.0",
+    "cors": "^2.8.5",
+    "dotenv-extended": "^2.3.0",
     "express": "^4.16.3",
-    "helmet": "^3.12.0",
     "joi": "^13.2.0",
     "mongoose": "^5.0.16",
     "request": "^2.85.0",

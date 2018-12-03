@@ -1,34 +1,7 @@
 "use strict";
-const mongoose= require('mongoose');
-var responseMessage={};
-//Schema to store journey report to MongoDB Collection
-const reportSchema= new mongoose.Schema({
-    reportType: {   //Specify the Type of Report
-        type: String,
-        required: true,
-    },
-    dateOfCreation: {   //Mention the date of creation of Report
-        type: Date,
-        required: true,
-        default: Date.now()
-    },
-    flightNo: {         // Collect the Flight Number
-        type: String,
-        default: ''
-    },
-    report: {           // The Complete analyzed report object 
-        type:Array,
-        required: true,
-        validate: {
-            validator: function(reportArray){
-                return reportArray && reportArray.length> 0
-            },
-            message: 'A report should have atleast one record'
-        }
-    }
-})
-//Model class of Report
-const reportModel= mongoose.model('Report', reportSchema);
+const reportModel = require('./models/reportModel');
+let responseMessage={};
+
 // exported function
 module.exports={
     // add flight number explicitly to report object
@@ -53,8 +26,6 @@ module.exports={
         }
         if(!reports)
             return res.status(404).send({"error":`No Reports Available`});
-    
-        console.log(`Fetched Report: ${reports}`)
         
         res.status(200).send(reports);
     },
@@ -85,7 +56,6 @@ async function saveReport(reportObject, responseObj){
         responseObj.status(503).send({"error":err});
     }
 
-    console.log(`Created Report: ${result}`);
     if(result){
         responseMessage.reportId= result._id;
         responseMessage.reportType= result.reportType;
